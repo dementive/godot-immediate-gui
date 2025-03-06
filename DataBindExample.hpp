@@ -10,11 +10,13 @@ using namespace godot;
 
 namespace GUI {
 
+// This is the "Model"
 struct Data {
 	String name = "hello?";
 	bool has_something = false;
 };
 
+// This is the "Controller"
 // DataBindExample to set as the root node of your GUI scenes
 class DataBindExample : public DataBind {
 	GDCLASS(DataBindExample, DataBind)
@@ -48,6 +50,7 @@ public:
 	}
 };
 
+// This is the "View"
 // some node in the scene that DataBindExample is root of to show example of setting metadata Expressions that the DataBind class will call.
 class DataBindLabelExample : public Label {
 	GDCLASS(DataBindLabelExample, Label)
