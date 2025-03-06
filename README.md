@@ -36,10 +36,6 @@ However, adding more bindable properties is trivially done by editing \_notifcat
 
 Another limitation/design choice is that DataBinds don't do anything with \_process() because evaluating a ton of Expressions every frame doesn't seem ideal to me, although you can still just call update() somewhere else in \_process. So things that constantly update like progress bars you'll still need to use a signal based approach or maybe add a similar function to update() in the DataBind class that is meant to run every frame.
 
-## Why Use DataBind?
-
-Having to manually update the state of every single control node with signals whenever your data changes doesn't scale well and is a very inefficient workflow for me. I found myself calling simple functions like set_visible() dozens of times on lots of different controls that I had to save references to. But with DataBinds the controller doesn't have to know anything about the control nodes it is actually effecting and it also automatically calls all the appropriate set_visible() methods correctly when the state changes. The standard godot approach works fine for small views with a few widgets with only a few states but for large views it forces you into writing 1000's of lines of boilerplate code that doesn't really need to exist and is usually extremely bug prone because keeping UI and data state in sync can get really confusing at scale.
-
 
 ## Other Similar Projects
 
