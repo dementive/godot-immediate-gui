@@ -28,7 +28,7 @@ protected:
 	static void _bind_methods() {
 		ClassDB::bind_method(D_METHOD("GetName"), &DataBindExample::GetName);
 		ClassDB::bind_method(D_METHOD("HasSomething"), &DataBindExample::HasSomething);
-		ClassDB::bind_static_method("DataBindExample", D_METHOD("OnButtonClick"), &DataBindExample::OnButtonClick);
+		ClassDB::bind_method(D_METHOD("OnButtonClick"), &DataBindExample::OnButtonClick);
 	}
 
 public:
