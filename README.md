@@ -41,7 +41,7 @@ The DataBind class works in 3 stages:
 
 1. Initialization - When a scene with a DataBind Node in it is instantiated the first thing it does is traverse the SceneTree. This will register all Control Nodes and associate them with their data bind metadata properties. Different properties have different initialization steps. For example the `pressed` property will automatically connect the pressed signal of a Button control Node and the `datamodel` property will automatically instantiate nested data bind scenes. 
 
-2. Update - Every frame a data bind scene is in the tree every data bind property it found in when initilizing will be executed.
+2. Update - Every frame a data bind scene is in the tree every data bind property it found when initilizing will be executed.
 
 3. Execute - If a data bind property needs to be updated then it's meta data function is called and the result of it is sent into the corresponding godot method to update the UI. For example, given a meta data property of `visible` with a value of `IsThingVisible()` the DataBind will call the IsThingVisible function and use it's result to call the godot `set_visible` function to actually change the control's visibility. If IsThingVisible has no arguments it will be executed as a Callable, otherwise it will be executed as an Expression. Callables also do not need parentheses, so a meta data property value of `IsThingVisible()` will end up being an Expression but `IsThingVisible` will be a Callable. Executing Callables is a lot faster than Expressions but Expressions are significantly more flexible and can do more so there are options to do both.
 
