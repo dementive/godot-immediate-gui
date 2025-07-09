@@ -1,16 +1,16 @@
-# Godot cpp Data Bind
+# Godot Immediate Mode Gui
 
-Godot 4.4 C++ GDExtension that adds a DataBind class that enables simple non-intrusive use of the MVC design pattern with as little boilerplate as possible for GUI scenes.
+Godot 4.4 C++ module code that adds a DataBind class that allows you to write immediate mode gui with data bindings with as little boilerplate as possible.
 
 ## Usage
 
 The steps to use the DataBind class in your project are:
 
-1. Make a custom class that Extends the DataBind class, this will be your controller.
-2. Add methods to the controller that call out to your data to update the UI state.
-3. Add the controller Node as the root node of a new GUI scene in the Godot editor (or with code) and add all the control nodes you'll need for your UI into it.
-4. To bind methods from your controller class to your view all you have to do is set String metadata properties, that correlate to actual Control properties, in the editor with a value that is a valid godot [Expression](https://docs.godotengine.org/en/stable/tutorials/scripting/evaluating_expressions.html) with methods from controller. Since Expressions are used to execute the controller methods you can use boolean logic or even do math in the Expressions for maximum flexibility, so something like `X() && Y() || Z()` would work for controls with complex state.
-5. Finally to actually update the UI call the DataBind::update() function on your controller, which you will have to call somewhere in your code whenever your model changes or when the view is opened to ensure the UI state is always in sync with your data. The DataBind will check all your controls in the scene for the metadata properties you set, execute the Expression, and then uses the result of the expression to call the appropriate method to update the UI state.
+1. Make a custom class that Extends the DataBind class.
+2. Add methods to the data bind class that call out to your data to update the UI state.
+3. Add the data bind Node as the second node directly after the root node of a new GUI scene in the Godot editor (or with code) and add all the control nodes you'll need for your UI into it.
+4. To bind methods from your data bind class to your view all you have to do is set String metadata properties, that correlate to actual Control properties, in the editor with a value that is a valid godot [Expression](https://docs.godotengine.org/en/stable/tutorials/scripting/evaluating_expressions.html) or Callable with methods from the data bind class. Since Expressions are used to execute the controller methods you can use boolean logic or even do math in the Expressions for maximum flexibility, so something like `X() && Y() || Z()` would work for controls with complex state.
+5. If the metadata properties were correctly hooked up to the DataBind node when the scene with the data bind enters the tree all UI will automatically update every frame.
 
 ## Example
 
@@ -18,24 +18,50 @@ See DataBindExample.hpp and read the comments for basic example usage.
 
 ## Installing and Compiling
 
-To setup add the repo as a submodule of your gdextension and then compile DataBind.hpp (don't forget to add the DataBind class to register_types as a RUNTIME_CLASS!) with godot-cpp 4.4, im sure you'll figure it out :)
+Copy the DataBind.cpp and DataBind.hpp files into your project and update your build system to compile them. Requires C++ 20 or higher.
 
-Once compiled the DataBind class will work from either C++ or gdscript.
+## Implementation Details
+
+Normally with godot you have to write a lot of code to keep the data that comes from your game logic in sync with the UI. When there gets to be a lot of data coming from a lot of places and being displayed in a lot of places this becomes pretty easy to mess up. Not only is it bug-prone but it is also a lot of code to write that doesn't really do anything, users will never care how data is synchronized with UI as long as it works. Using Immediate mode for gui solves the data synchronization problem completely as the data automatically gets updated every frame. This way you can write a DataBind class, hook it up to your game logic data, hook the UI in the SceneTree up to the DataBind and then the UI will update automatically without the need to write any extra data synchronization code.
+
+
+Godot uses retained mode for it's Control gui system so unless we completely forsake the Control system (which I don't want to do because it is really nice to use) the immediate mode part has to be hacked on top of the existing Control system somehow. This sounds pretty sketchy but it's not too bad, ReactJS does this same kind of thing with their "virtual DOM" hacked on top of the browsers DOM.
+
+
+The way I ended up solving this with the DataBind class was by hacking "data bind properties" on top of godot's Object `metadata` property. Every Object has a metadata Dictionary and with this we can associate data bind properties with the Expression/Callable of functions on the DataBind node. 
+
+
+This works out pretty well since metadata properties can be set directly in the editor SceneTree so data bind properties can easily be adjusted at runtime without recompiling. A nice side effect that's part of this hack is that there is almost never a need to directly reference a control node with get_node (or some syntax sugar that calls get_node) because the DataBind handles setting everything up and updating it. Normally when writing gui in godot there has to be tons of get_node calls at some point to reference a node in the scene tree in order to update it but with the DataBind you don't have to do any of this.
+
+
+When setting up DataBind nodes in a scene they must be added as the first child of the root node because they are not Control Nodes so they can't be the root of the scene since it would break nested data binds and container layouts.
+
+
+The DataBind class works in 3 stages:
+
+1. Initialization - When a scene with a DataBind Node in it is instantiated the first thing it does is traverse the SceneTree. This will register all Control Nodes and associate them with their data bind metadata properties. Different properties have different initialization steps. For example the `pressed` property will automatically connect the pressed signal of a Button control Node and the `datamodel` property will automatically instantiate nested data bind scenes. 
+
+2. Update - Every frame a data bind scene is in the tree every data bind property it found in when initilizing will be executed.
+
+3. Execute - If a data bind property needs to be updated then it's meta data function is called and the result of it is sent into the corresponding godot method to update the UI. For example, given a meta data property of `visible` with a value of `IsThingVisible()` the DataBind will call the IsThingVisible function and use it's result to call the godot `set_visible` function to actually change the control's visibility. If IsThingVisible has no arguments it will be executed as a Callable, otherwise it will be executed as an Expression. Callables also do not need parentheses, so a meta data property value of `IsThingVisible()` will end up being an Expression but `IsThingVisible` will be a Callable. Executing Callables is a lot faster than Expressions but Expressions are significantly more flexible and can do more so there are options to do both.
 
 ## Limitations
 
-The DataBind class does not work for all properties, it currently only supports the properties I needed at the time of writing, which includes:
+The DataBind class does not work for all properties on a Control Node, it currently only supports the properties I needed at the time of writing, which includes:
 
 - pressed: for buttons, connects the pressed signal to a method from the controller class
-- visible: for any control, calls set_visible()
-- disabled: for buttons, calls set_disabled()
-- text: for labels, calls set_text()
-- texture: for any Control with a set_texture() method
+- datamodel: a data model is used for instantiating other scenes that have a different DataBind, this allows nesting data model scenes in the scene tree. The metadata argument function call must return an Array of Nodes where each node is the root node of the data model scene to instantiate. For example if you were making an Inventory UI you might have a "InventorySlot" scene with 20 slots, instead of putting the 20 scenes right in the tree the datamodel will handle all this automatically.
+- visible - Calls a control's set_visible function. Visible has different behavior than all other properties as it must be checked every frame to ensure correct visibility of nested data binds. All other properties that get checked every frame only get their functions run if they are actually visible in the scene tree.
+- disabled - Calls a control's set_disabled function.
+- text - Calls a label's set_text function.
+- texture - Calls a control's set_texture function.
+- icon - Calls a control's set_button_icon function.
+- tooltip - Calls a control's set_tooltip function.
+- progress - Calls a control's set_progress function.
+
+The `datamodel` and `pressed` properties are not checked every frame, their functions are only run one time when the data model scene is first instantiated.
 
 However, adding more bindable properties is trivially done by editing \_notifcation() and update() in DataBind.cpp.
-
-Another limitation/design choice is that DataBinds don't do anything with \_process() because evaluating a ton of Expressions every frame doesn't seem ideal to me, although you can still just call update() somewhere else in \_process. So things that constantly update like progress bars you'll still need to use a signal based approach or maybe add a similar function to update() in the DataBind class that is meant to run every frame.
-
 
 ## Other Similar Projects
 
