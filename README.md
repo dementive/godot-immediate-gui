@@ -27,7 +27,7 @@ The TransferResourcesPopup and PlanetView both use an older version of the DataB
 
 ## Installing and Compiling
 
-Copy the DataBind.cpp and DataBind.hpp files into your project and update your build system to compile them. Requires C++ 20 or higher.
+Copy the DataBind.cpp and DataBind.hpp files into your project and update your build system to compile them.
 
 ## Implementation Details
 
