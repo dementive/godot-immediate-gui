@@ -23,6 +23,8 @@ The examples are:
 
 - PlanetView - Very complex example that shows just about everything you can do with DataBinds. It shows progress bars, using expressions in data bind properties, setting textures, dynamically creating item lists, handling open/close logic, and using datamodels.
 
+The TransferResourcesPopup and PlanetView both use an older version of the DataBind class so everything won't be the same in those as it currently works. The Hud example is up to date with the current version though.
+
 ## Installing and Compiling
 
 Copy the DataBind.cpp and DataBind.hpp files into your project and update your build system to compile them. Requires C++ 20 or higher.
@@ -41,7 +43,7 @@ The way I ended up solving this with the DataBind class was by hacking "data bin
 This works out pretty well since metadata properties can be set directly in the editor SceneTree so data bind properties can easily be adjusted at runtime without recompiling. A nice side effect that's part of this hack is that there is almost never a need to directly reference a control node with get_node (or some syntax sugar that calls get_node) because the DataBind handles setting everything up and updating it. Normally when writing gui in godot there has to be tons of get_node calls at some point to reference a node in the scene tree in order to update it but with the DataBind you don't have to do any of this.
 
 
-When setting up DataBind nodes in a scene they must be added as the first child of the root node because they are not Control Nodes so they can't be the root of the scene since it would break nested data binds and container layouts.
+When setting up DataBind nodes in a scene they must be the root node of the scene they are in so they can properly find all data bind properties on all nodes in the scene.
 
 
 The DataBind class works in 3 stages:

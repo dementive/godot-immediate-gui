@@ -2,16 +2,14 @@
 
 #include "core/math/expression.h"
 
-#include "scene/main/node.h"
-
-class Control;
+#include "scene/gui/control.h"
 
 #define create_databind(m_class, m_scene) Object::cast_to<m_class>(DataBind::init(m_scene))
 
 namespace CG {
 
-class DataBind : public Node {
-	GDCLASS(DataBind, Node)
+class DataBind : public Control {
+	GDCLASS(DataBind, Control)
 
 private:
 	enum DataBindProperty : uint8_t {
@@ -49,7 +47,7 @@ private:
 	void setup_datamodel(Control *node);
 
 	template <typename T> void execute(const T &callable_or_expr, Control *node, const StringName &method, Variant::Type expected_type, const StringName &expected_class = "");
-	void update_properties(Control *node, const auto &property);
+	template <typename T> void update_properties(Control *node, const T &property);
 
 	// Fill node_expressions with all nodes that are Controls, have ceratin metadata properties, and are owned by this->parent.
 	void _find_metadata_properties(Node *node_to_check);
@@ -65,7 +63,7 @@ protected:
 
 public:
 	// Call to init DataBind scene.
-	// Loads scene file from disc and then fills all DataBind metadata properties.
+	// Loads scene file from disk and then fills all DataBind metadata properties.
 	static DataBind *init(const String &p_path);
 };
 
