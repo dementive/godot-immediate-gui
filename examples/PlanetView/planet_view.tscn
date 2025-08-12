@@ -1,0 +1,264 @@
+[gd_scene load_steps=6 format=3 uid="uid://cdf4bnrd28vb3"]
+
+[ext_resource type="PackedScene" uid="uid://bopj44bs67idc" path="res://scenes/gui/shared/header.tscn" id="2_8ms4n"]
+[ext_resource type="Texture2D" uid="uid://8w5a5cvc3g3a" path="res://gfx/planet_textures/Alpine/Alpine1.dds" id="3_loe5r"]
+[ext_resource type="Texture2D" uid="uid://blcpkmpbvriln" path="res://gfx/interface/icons/resources/manganese.png" id="4_3eioo"]
+[ext_resource type="Texture2D" uid="uid://cf2811ac3ptlq" path="res://gfx/interface/icons/resources/neodymium.png" id="5_yu4c0"]
+[ext_resource type="Texture2D" uid="uid://3oqofdmok8p" path="res://gfx/interface/icons/resources/nitrogen.png" id="6_1kr0c"]
+
+[node name="PanelContainer" type="PanelContainer"]
+clip_contents = true
+offset_left = 30.0
+offset_top = 64.0
+mouse_force_pass_scroll_events = false
+metadata/_edit_vertical_guides_ = [-277.0]
+
+[node name="PlanetWindow" type="PlanetView" parent="."]
+
+[node name="Vbox" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Header" parent="Vbox" node_paths=PackedStringArray("root_control") instance=ExtResource("2_8ms4n")]
+root_control = NodePath("../..")
+text = &"PLANET_NAME"
+layout_mode = 2
+metadata/text = "GetName"
+
+[node name="MarginContainer" type="MarginContainer" parent="Vbox"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+
+[node name="NinePatchRect" type="NinePatchRect" parent="Vbox/MarginContainer"]
+custom_minimum_size = Vector2(450, 220)
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("3_loe5r")
+region_rect = Rect2(115.101, 136.258, 1826.57, 755.703)
+metadata/texture = "GetPlanetTexture"
+
+[node name="HSeparator2" type="HSeparator" parent="Vbox"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+
+[node name="ResourcesHbox" type="HBoxContainer" parent="Vbox"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Vbox/ResourcesHbox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_right = 50
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Vbox/ResourcesHbox/MarginContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="ResourceTexture1" type="TextureRect" parent="Vbox/ResourcesHbox/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("4_3eioo")
+expand_mode = 2
+metadata/texture = "GetResourceIcon(0)"
+
+[node name="ResourceTexture2" type="TextureRect" parent="Vbox/ResourcesHbox/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("4_3eioo")
+expand_mode = 2
+metadata/texture = "GetResourceIcon(1)"
+
+[node name="ResourceTexture3" type="TextureRect" parent="Vbox/ResourcesHbox/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("4_3eioo")
+expand_mode = 2
+metadata/texture = "GetResourceIcon(2)"
+
+[node name="ResourceTexture4" type="TextureRect" parent="Vbox/ResourcesHbox/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("4_3eioo")
+expand_mode = 2
+metadata/texture = "GetResourceIcon(3)"
+
+[node name="ResourceTexture5" type="TextureRect" parent="Vbox/ResourcesHbox/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("4_3eioo")
+expand_mode = 2
+metadata/texture = "GetResourceIcon(4)"
+
+[node name="ResourceTexture6" type="TextureRect" parent="Vbox/ResourcesHbox/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("4_3eioo")
+expand_mode = 2
+metadata/texture = "GetResourceIcon(5)"
+
+[node name="ResourcesHbox2" type="HBoxContainer" parent="Vbox"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Vbox/ResourcesHbox2"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 131
+theme_override_constants/margin_right = 131
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Vbox/ResourcesHbox2/MarginContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="ResourceTexture1" type="TextureRect" parent="Vbox/ResourcesHbox2/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("5_yu4c0")
+expand_mode = 2
+metadata/texture = "GetResourceIcon(6)"
+
+[node name="ResourceTexture2" type="TextureRect" parent="Vbox/ResourcesHbox2/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("6_1kr0c")
+expand_mode = 2
+metadata/texture = "GetResourceIcon(7)"
+
+[node name="ResourceTexture3" type="TextureRect" parent="Vbox/ResourcesHbox2/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("6_1kr0c")
+expand_mode = 2
+metadata/texture = "GetResourceIcon(8)"
+
+[node name="ResourceTexture4" type="TextureRect" parent="Vbox/ResourcesHbox2/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("5_yu4c0")
+expand_mode = 2
+metadata/texture = "GetResourceIcon(9)"
+
+[node name="HSeparator3" type="HSeparator" parent="Vbox"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+
+[node name="ColonizeVbox" type="VBoxContainer" parent="Vbox"]
+layout_mode = 2
+alignment = 2
+metadata/visible = "!IsColonized()"
+
+[node name="ColonizeButton" type="CGButton" parent="Vbox/ColonizeVbox"]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Establish Colony"
+metadata/visible = "IsUncolonized"
+metadata/pressed = "OnColonizePressed"
+metadata/tooltip = "GetColonizeTooltip"
+metadata/disabled = "ColonizeDisabled"
+
+[node name="ColonizeProgressBar" type="ProgressBar" parent="Vbox/ColonizeVbox"]
+visible = false
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+max_value = 1000.0
+metadata/visible = "IsColonizing"
+metadata/progress = "GetColonizationProgress"
+
+[node name="OwnedVbox" type="VBoxContainer" parent="Vbox"]
+layout_mode = 2
+size_flags_vertical = 3
+metadata/visible = "IsColonized"
+
+[node name="CGTabContainer" type="CGTabContainer" parent="Vbox/OwnedVbox"]
+layout_mode = 2
+tab_alignment = 1
+current_tab = 0
+tab_focus_mode = 0
+
+[node name="STRUCTURES" type="MarginContainer" parent="Vbox/OwnedVbox/CGTabContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 15
+metadata/_tab_index = 0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Vbox/OwnedVbox/CGTabContainer/STRUCTURES"]
+custom_minimum_size = Vector2(0, 145)
+layout_mode = 2
+follow_focus = true
+
+[node name="Vbox" type="VBoxContainer" parent="Vbox/OwnedVbox/CGTabContainer/STRUCTURES/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="StructuresHbox" type="HBoxContainer" parent="Vbox/OwnedVbox/CGTabContainer/STRUCTURES/ScrollContainer/Vbox"]
+layout_mode = 2
+alignment = 1
+
+[node name="StructuresGrid" type="GridContainer" parent="Vbox/OwnedVbox/CGTabContainer/STRUCTURES/ScrollContainer/Vbox/StructuresHbox"]
+layout_mode = 2
+columns = 3
+metadata/datamodel = "GetStructures"
+
+[node name="ConstructionQueueContainer" type="CenterContainer" parent="Vbox/OwnedVbox/CGTabContainer/STRUCTURES/ScrollContainer/Vbox"]
+layout_mode = 2
+metadata/visible = "HasBuildingQueue"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Vbox/OwnedVbox/CGTabContainer/STRUCTURES/ScrollContainer/Vbox/ConstructionQueueContainer"]
+layout_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="Vbox/OwnedVbox/CGTabContainer/STRUCTURES/ScrollContainer/Vbox/ConstructionQueueContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 1
+
+[node name="ConstructionQueue" type="ItemList" parent="Vbox/OwnedVbox/CGTabContainer/STRUCTURES/ScrollContainer/Vbox/ConstructionQueueContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+allow_rmb_select = true
+allow_search = false
+auto_width = true
+auto_height = true
+max_columns = 10
+fixed_icon_size = Vector2i(35, 35)
+
+[node name="HSeparator" type="HSeparator" parent="Vbox/OwnedVbox/CGTabContainer/STRUCTURES/ScrollContainer/Vbox/ConstructionQueueContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="RESOURCES" type="MarginContainer" parent="Vbox/OwnedVbox/CGTabContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_bottom = 5
+metadata/_tab_index = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Vbox/OwnedVbox/CGTabContainer/RESOURCES"]
+custom_minimum_size = Vector2(0, 250)
+layout_mode = 2
+follow_focus = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Vbox/OwnedVbox/CGTabContainer/RESOURCES/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="StockpileGridContainer" type="GridContainer" parent="Vbox/OwnedVbox/CGTabContainer/RESOURCES/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 6
+columns = 8
+metadata/datamodel = "GetResourceStockpile"

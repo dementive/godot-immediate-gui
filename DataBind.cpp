@@ -1,13 +1,20 @@
 #include "DataBind.hpp"
 
 #include "scene/gui/control.h"
+#include "scene/resources/packed_scene.h"
 
 #include "cg/Utility.hpp"
 
 using namespace CG;
 
+Node *init_scene(const String &p_path) {
+	const Ref<PackedScene> scene = ResourceLoader::load(p_path);
+	ERR_FAIL_COND_V_MSG(scene == nullptr, nullptr, String("Error initializing:" + p_path));
+	return scene->instantiate();
+}
+
 DataBind *DataBind::init(const String &p_path) {
-	Node *scene = UT::init_scene(p_path);
+	Node *scene = init_scene(p_path);
 	DataBind *databind = Object::cast_to<DataBind>(scene->get_child(0));
 
 	if (databind == nullptr) [[unlikely]]
@@ -130,10 +137,10 @@ void DataBind::setup_datamodel(Control *node) {
 		MethodBind *method = ClassDB::get_method(base_instance->get_class_name(), node->get_meta(m_property));                                                                               \
                                                                                                                                                                                              \
 		if (method != nullptr) {                                                                                                                                                             \
-			const DataBindCallableProperty property{ .property_type = m_type, .callable = method };                                                                                                \
+			const DataBindCallableProperty property{ .property_type = m_type, .callable = method };                                                                                          \
 			data_bind_node.callable_properties.push_back(property);                                                                                                                          \
 		} else {                                                                                                                                                                             \
-			const DataBindExpressionProperty property{ .property_type = m_type, .callable = get_expression(node->get_meta(m_property)) };                                                          \
+			const DataBindExpressionProperty property{ .property_type = m_type, .callable = get_expression(node->get_meta(m_property)) };                                                    \
 			data_bind_node.expression_properties.push_back(property);                                                                                                                        \
 		}                                                                                                                                                                                    \
 	}
@@ -187,25 +194,25 @@ _ALWAYS_INLINE_ void DataBind::update_properties(Control *node, const auto &prop
 
 	switch (property.property_type) {
 		case VISIBLE: {
-			execute(property.callable, node, "set_visible", Variant::BOOL);
+			execute(property.callable, node, SNAME("set_visible"), Variant::BOOL);
 		} break;
 		case DISABLED: {
-			execute(property.callable, node, "set_disabled", Variant::BOOL);
+			execute(property.callable, node, SNAME("set_disabled"), Variant::BOOL);
 		} break;
 		case TEXT: {
-			execute(property.callable, node, "set_text", Variant::STRING);
+			execute(property.callable, node, SNAME("set_text"), Variant::STRING);
 		} break;
 		case TEXTURE: {
-			execute(property.callable, node, "set_texture", Variant::OBJECT, "Texture2D");
+			execute(property.callable, node, SNAME("set_texture"), Variant::OBJECT, SNAME("Texture2D"));
 		} break;
 		case ICON: {
-			execute(property.callable, node, "set_button_icon", Variant::OBJECT, "Texture2D");
+			execute(property.callable, node, SNAME("set_button_icon"), Variant::OBJECT, SNAME("Texture2D"));
 		} break;
 		case TOOLTIP: {
-			execute(property.callable, node, "set_tooltip_text", Variant::STRING);
+			execute(property.callable, node, SNAME("set_tooltip_text"), Variant::STRING);
 		} break;
 		case PROGRESS: {
-			execute(property.callable, node, "set_value_no_signal", Variant::FLOAT);
+			execute(property.callable, node, SNAME("set_value_no_signal"), Variant::FLOAT);
 		} break;
 	}
 }

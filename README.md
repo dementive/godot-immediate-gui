@@ -1,6 +1,6 @@
 # Godot Immediate Mode Gui
 
-Godot 4.4 C++ module code that adds a DataBind class that allows you to write immediate mode gui with data bindings with as little boilerplate as possible.
+Godot 4.5 C++ module code that adds a DataBind class that allows you to write immediate mode gui with data bindings with as little boilerplate as possible.
 
 ## Usage
 
@@ -14,7 +14,14 @@ The steps to use the DataBind class in your project are:
 
 ## Example
 
-See DataBindExample.hpp and read the comments for basic example usage.
+There are also several examples in the `examples` directory with code I pulled straight from my projects where I actually use DataBinds. The code is not complete but reading over it should give a good idea of the things you can do.
+The examples are:
+
+- Hud - Simple example that only has a label and a few buttons for a game hud.
+
+- TransferResourcesPopup - Moderately complex example of a popup that transfers in game resources from one game object to another.
+
+- PlanetView - Very complex example that shows just about everything you can do with DataBinds. It shows progress bars, using expressions in data bind properties, setting textures, dynamically creating item lists, handling open/close logic, and using datamodels.
 
 ## Installing and Compiling
 
@@ -41,7 +48,7 @@ The DataBind class works in 3 stages:
 
 1. Initialization - When a scene with a DataBind Node in it is instantiated the first thing it does is traverse the SceneTree. This will register all Control Nodes and associate them with their data bind metadata properties. Different properties have different initialization steps. For example the `pressed` property will automatically connect the pressed signal of a Button control Node and the `datamodel` property will automatically instantiate nested data bind scenes. 
 
-2. Update - Every frame a data bind scene is in the tree every data bind property it found when initilizing will be executed.
+2. Update - Every frame a data bind scene is in the tree every data bind property it found when initializing will be executed.
 
 3. Execute - If a data bind property needs to be updated then it's meta data function is called and the result of it is sent into the corresponding godot method to update the UI. For example, given a meta data property of `visible` with a value of `IsThingVisible()` the DataBind will call the IsThingVisible function and use it's result to call the godot `set_visible` function to actually change the control's visibility. If IsThingVisible has no arguments it will be executed as a Callable, otherwise it will be executed as an Expression. Callables also do not need parentheses, so a meta data property value of `IsThingVisible()` will end up being an Expression but `IsThingVisible` will be a Callable. Executing Callables is a lot faster than Expressions but Expressions are significantly more flexible and can do more so there are options to do both.
 
@@ -62,6 +69,19 @@ The DataBind class does not work for all properties on a Control Node, it curren
 The `datamodel` and `pressed` properties are not checked every frame, their functions are only run one time when the data model scene is first instantiated.
 
 However, adding more bindable properties is trivially done by editing \_notifcation() and update() in DataBind.cpp.
+
+## Performance
+
+Most of the time signal based UI architecture will be more performant than immediate mode since it only has to do updates when you explicitly tell it to update instead of every frame.
+
+
+However I've found that 99% of the time the extra performance hit of doing UI updates every frame makes almost no difference at all on the total performance of the application. I've profiled my godot applications with intel vtune, perf, hotspot, and valgrind and in all my projects a majority of the cpu time is spent just rendering the scene. The relative cost of updating the UI every frame is mostly negligible compared to the how expensive rendering every frame is.
+
+
+With that said you can of course still write code that is super slow if your UI updates are very expensive. If your UI update logic is already super slow it's going to be much more noticeable with immediate mode than with retained mode since updates happen a lot more often.
+
+
+There are easy ways around this though if you analyze how your data is used and cache the value. For example if you have a function `do_thing()` that calls into your game data and then computes some super expensive value that takes 5ms to compute it's probably not a great idea to call it every frame. Most values likely don't need to be computed every frame. Caching the result of `do_thing()` by only calling it when the computed data actually changes (or just call it less frequently like every 120th frame instead of every frame) and storing it in a variable somewhere can help fix slow updates.
 
 ## Other Similar Projects
 
