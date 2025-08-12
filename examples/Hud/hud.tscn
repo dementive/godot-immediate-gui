@@ -3,8 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://becg3pgt1etd8" path="res://gfx/icon.svg" id="1_86rft"]
 [ext_resource type="PackedScene" uid="uid://c5vad7wid6ojh" path="res://scenes/gui/debug_performance.tscn" id="2_624ws"]
 
-[node name="Hud" type="Control"]
-layout_mode = 3
+[node name="Hud" type="Hud"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -12,11 +11,8 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Hud" type="Hud" parent="."]
-
 [node name="MarginContainer" type="MarginContainer" parent="."]
-layout_mode = 1
-anchors_preset = -1
+layout_mode = 0
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
@@ -67,8 +63,7 @@ expand_icon = true
 metadata/pressed = "SetMapMode(2)"
 
 [node name="MarginContainer2" type="MarginContainer" parent="."]
-layout_mode = 1
-anchors_preset = -1
+layout_mode = 0
 offset_right = 190.0
 offset_bottom = 54.0
 theme_override_constants/margin_left = 5
@@ -88,3 +83,6 @@ metadata/text = "GetPlayerName()"
 
 [node name="DebugPerformanceMonitor" parent="." instance=ExtResource("2_624ws")]
 layout_mode = 1
+anchors_preset = 2
+offset_left = 0.0
+offset_bottom = 0.0
