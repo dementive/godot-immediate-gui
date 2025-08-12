@@ -8,7 +8,7 @@ The steps to use the DataBind class in your project are:
 
 1. Make a custom class that Extends the DataBind class.
 2. Add methods to the data bind class that call out to your data to update the UI state.
-3. Add the data bind Node as the second node directly after the root node of a new GUI scene in the Godot editor (or with code) and add all the control nodes you'll need for your UI into it.
+3. Add the data bind Node as the root node of a new GUI scene in the Godot editor (or with code) and add all the control nodes you'll need for your UI into it.
 4. To bind methods from your data bind class to your view all you have to do is set String metadata properties, that correlate to actual Control properties, in the editor with a value that is a valid godot [Expression](https://docs.godotengine.org/en/stable/tutorials/scripting/evaluating_expressions.html) or Callable with methods from the data bind class. Since Expressions are used to execute the controller methods you can use boolean logic or even do math in the Expressions for maximum flexibility, so something like `X() && Y() || Z()` would work for controls with complex state.
 5. If the metadata properties were correctly hooked up to the DataBind node when the scene with the data bind enters the tree all UI will automatically update every frame.
 
